@@ -7,14 +7,17 @@
  *
  * @author guilh
  */
+
+import org.openstreetmap.gui.jmapviewer.Coordinate;
+
 public class Solicitacao {
     
     private int ID;
-    private String coordenadas;
+    private Coordinate coordenadas;
     private String tipoDeEmergencia;
     private int grauDeEmergencia;
     
-    public Solicitacao(int ID, String coordenadas, String tipoDeEmergencia, int grauDeEmergencia) {
+    public Solicitacao(int ID, Coordinate coordenadas, String tipoDeEmergencia, int grauDeEmergencia) {
         
         this.ID = ID;
         this.coordenadas = coordenadas;
@@ -40,14 +43,14 @@ public class Solicitacao {
     /**
      * @return the coordenadas
      */
-    public String getCoordenadas() {
+    public Coordinate getCoordenadas() {
         return coordenadas;
     }
 
     /**
      * @param coordenadas the coordenadas to set
      */
-    public void setCoordenadas(String coordenadas) {
+    public void setCoordenadas(Coordinate coordenadas) {
         this.coordenadas = coordenadas;
     }
 

@@ -37,18 +37,7 @@ public class TelaPrincipal extends JFrame {
         map.setZoom(10);
         map.setDisplayPosition(new Coordinate(-12.5, -39.3), 9); // Centraliza na região entre feira e salvador
 
-        map.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    Point p = e.getPoint();
-                    Coordinate coord = (Coordinate) map.getPosition(p);
-                    JOptionPane.showMessageDialog(TelaPrincipal.this,
-                            "Coordenadas: " + coord.getLat() + ", " + coord.getLon());
-                    cadastrarLugar(coord);
-                }
-            }
-        });
+        
         
         inserirCentros();
 
@@ -59,61 +48,164 @@ public class TelaPrincipal extends JFrame {
         add(rotaBtn, BorderLayout.SOUTH);
         
         // 2. Criação da Barra de Menu (JMenuBar)
-JMenuBar menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
+
+        // 3. Criação do Menu principal (JMenu)
+        JMenu menuAcoes = new JMenu("Ações de Emergência");
+        menuAcoes.setMnemonic('A'); // Atalho Alt+A para acessar o menu
+
+        // 4. Criação e Adição dos Itens do Menu (JMenu como Submenu)
+
+        // --- Submenu 1: Centros de Recursos (Substitui o JMenuItem) ---
+        JMenu menuCentros = new JMenu("Centros de Recursos");
+        menuCentros.setMnemonic('C'); // Atalho Alt+A, depois C
+        menuAcoes.add(menuCentros); // Adiciona o JMenu como um item do menuAcoes
+
+        // Adiciona 4 itens genéricos ao Submenu 1
+        adicionarItensGenericos(menuCentros, "Centro");
+
+
+        // --- Submenu 2: Equipes de Apoio (Substitui o JMenuItem) ---
+        JMenu menuEquipes = new JMenu("Equipes de Apoio");
+        menuEquipes.setMnemonic('E'); // Atalho Alt+A, depois E
+        menuAcoes.add(menuEquipes);
+
+        // Adiciona 4 itens genéricos ao Submenu 2
+        adicionarItensGenericos(menuEquipes, "Equipe");
+
+
+        // Adiciona um separador visual
+        menuAcoes.addSeparator(); 
+
+        // --- Submenu 3: Solicitar Resgate (Substitui o JMenuItem) ---
+        JMenu menuResgate = new JMenu("Solicitar Resgate");
+        menuResgate.setMnemonic('R'); // Atalho Alt+A, depois R
+        menuAcoes.add(menuResgate);
         
-// 3. Criação do Menu principal (JMenu)
-JMenu menuAcoes = new JMenu("Ações de Emergência");
-menuAcoes.setMnemonic('A'); // Atalho Alt+A para acessar o menu
-
-// 4. Criação e Adição dos Itens do Menu (JMenu como Submenu)
+        JMenuItem novoPedidoDeResgate = new JMenuItem("Novo pedido de resgate");
         
-// --- Submenu 1: Centros de Recursos (Substitui o JMenuItem) ---
-JMenu menuCentros = new JMenu("Centros de Recursos");
-menuCentros.setMnemonic('C'); // Atalho Alt+A, depois C
-menuAcoes.add(menuCentros); // Adiciona o JMenu como um item do menuAcoes
+        novoPedidoDeResgate.addActionListener(e ->{                        
+            
+            JDialog pedirCoordenadas = new JDialog();
+            pedirCoordenadas.setLocationRelativeTo(map);
+            pedirCoordenadas.setTitle("Solicitar resgate");
+            pedirCoordenadas.setSize(300, 200);                    
+            
+            // Mensagem na caixa de diálogo
+            JLabel mensagem = new JLabel("Clique no local em que você está no mapa");
+            pedirCoordenadas.add(mensagem, BorderLayout.CENTER);
+            
+            JButton botaoOK = new JButton("OK");
+            botaoOK.addActionListener(es ->{
+                pedirCoordenadas.dispose();                
+            });
+            
+            pedirCoordenadas.add(botaoOK, BorderLayout.SOUTH);            
+            pedirCoordenadas.setVisible(true);
+            
+            map.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        Point p = e.getPoint();
+                        Coordinate coord = (Coordinate) map.getPosition(p);
+                        JOptionPane.showMessageDialog(TelaPrincipal.this,
+                                "Coordenadas: " + coord.getLat() + ", " + coord.getLon());
+                        
+                        // Perguntar tipo de emergência
+                        
+                        String[] tiposDeEmergencia = { "Médica", "Incêndio", "Logística", "Suprimentos" };
 
-// Adiciona 4 itens genéricos ao Submenu 1
-adicionarItensGenericos(menuCentros, "Centro");
+                        int tipoDeEmergencia = JOptionPane.showOptionDialog(
+                                null,
+                                "Selecione o tipo de emergência:",
+                                "Tipo de Resgate",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                tiposDeEmergencia,
+                                tiposDeEmergencia[0]
+                        );
 
+                        if (tipoDeEmergencia >= 0) {
+                            String emergenciaEscolhida = (String) tiposDeEmergencia[tipoDeEmergencia];
+                            System.out.println("Tipo escolhido: " + emergenciaEscolhida);
+                        }
+                                               
+                        // Grau de emergência
+                        
+                        Object[] grausDeEmergencia = { 1, 2, 3, 4 };
 
-// --- Submenu 2: Equipes de Apoio (Substitui o JMenuItem) ---
-JMenu menuEquipes = new JMenu("Equipes de Apoio");
-menuEquipes.setMnemonic('E'); // Atalho Alt+A, depois E
-menuAcoes.add(menuEquipes);
+                        int grauDeEmergencia = JOptionPane.showOptionDialog(
+                                null,
+                                "Selecione o grau de emergência(1 = leve, 2 = média, 3 = grave, 4 = crítico):",
+                                "Prioridade do Resgate",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                grausDeEmergencia,
+                                grausDeEmergencia[0]
+                        );
 
-// Adiciona 4 itens genéricos ao Submenu 2
-adicionarItensGenericos(menuEquipes, "Equipe");
-
-
-// Adiciona um separador visual
-menuAcoes.addSeparator(); 
-
-// --- Submenu 3: Solicitar Resgate (Substitui o JMenuItem) ---
-JMenu menuResgate = new JMenu("Solicitar Resgate");
-menuResgate.setMnemonic('R'); // Atalho Alt+A, depois R
-menuAcoes.add(menuResgate);
-
-// Adiciona 4 itens genéricos ao Submenu 3
-adicionarItensGenericos(menuResgate, "Resgate");
+                        if (tipoDeEmergencia >= 0) {
+                            Object grauEscolhido = (int) grausDeEmergencia[grauDeEmergencia];
+                            System.out.println("Grau : " + grauEscolhido);
+                        }
+                        
+                        // Gambiarra (netbeans não aceitou a variável que veio do JOption).
+                        String emergenciaEscolhida = tiposDeEmergencia[tipoDeEmergencia];
+                        Solicitacao novaSolicitacao = new Solicitacao(1, coord, emergenciaEscolhida, grauDeEmergencia);
+                        
+                    }
+                }
+            });
+            
+            
+            
+        });
         
-// 5. Adiciona o Menu principal à Barra de Menu
-menuBar.add(menuAcoes);
+        menuResgate.add(novoPedidoDeResgate);
 
-// 6. Define a Barra de Menu no Frame
-setJMenuBar(menuBar);
+        // Adiciona 4 itens genéricos ao Submenu 3
+        //adicionarItensGenericos(menuResgate, "Resgate");
+
+        // 5. Adiciona o Menu principal à Barra de Menu
+        menuBar.add(menuAcoes);
+
+        // 6. Define a Barra de Menu no Frame
+        setJMenuBar(menuBar);
 
 
-// --- Método Auxiliar para Adicionar Itens Genéricos ---
+        // --- Método Auxiliar para Adicionar Itens Genéricos ---
 
-// Este método deve ser criado dentro da sua classe principal (ex: TelaPrincipal)
+        // Este método deve ser criado dentro da sua classe principal (ex: TelaPrincipal)
 
     }
     
     
-private void adicionarItensGenericos(JMenu submenu, String prefixo) {
-    for (int i = 1; i <= 4; i++) {
-        JMenuItem item = new JMenuItem(prefixo + " - Opção " + i);
-        
+    private void adicionarItensGenericos(JMenu submenu, String prefixo) {
+        for (int i = 1; i <= 4; i++) {
+            JMenuItem item = new JMenuItem(prefixo + " - Opção " + i);
+
+            // Adiciona um ActionListener para mostrar o que foi selecionado
+            item.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // A ação agora é do item genérico, não do menu principal
+                    String nomeItem = ((JMenuItem)e.getSource()).getText();
+                    JOptionPane.showMessageDialog(TelaPrincipal.this, 
+                        "Opção selecionada: " + nomeItem, 
+                        "Sub-menu", JOptionPane.INFORMATION_MESSAGE);
+                    System.out.println("Ação: Item de sub-menu selecionado: " + nomeItem);
+                }
+            });
+            submenu.add(item);
+        }
+    }
+
+    private void adicionarItensMenuRecursos(JMenu submenu, String prefixo){
+        JMenuItem item = new JMenuItem("Cadastrar Centro de Recursos");
+
         // Adiciona um ActionListener para mostrar o que foi selecionado
         item.addActionListener(new ActionListener() {
             @Override
@@ -128,25 +220,6 @@ private void adicionarItensGenericos(JMenu submenu, String prefixo) {
         });
         submenu.add(item);
     }
-}
-
-private void adicionarItensMenuRecursos(JMenu submenu, String prefixo){
-    JMenuItem item = new JMenuItem("Cadastrar Centro de Recursos");
-        
-    // Adiciona um ActionListener para mostrar o que foi selecionado
-    item.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // A ação agora é do item genérico, não do menu principal
-            String nomeItem = ((JMenuItem)e.getSource()).getText();
-            JOptionPane.showMessageDialog(TelaPrincipal.this, 
-                "Opção selecionada: " + nomeItem, 
-                "Sub-menu", JOptionPane.INFORMATION_MESSAGE);
-            System.out.println("Ação: Item de sub-menu selecionado: " + nomeItem);
-        }
-    });
-    submenu.add(item);
-}
     
     private void cadastrarCentroRecursos(Coordinate coord){
         String nome = JOptionPane.showInputDialog(this, "Nome do Centro de Recursos:");

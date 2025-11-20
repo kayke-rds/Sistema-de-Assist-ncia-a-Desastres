@@ -7,13 +7,13 @@
  *
  * @author guilh
  */
-public class Fila {
+public class FilaDeSolicitacoes {
     
     Nodo primeiro;
     Nodo ultimo;
     int totalDeSolicitacoes;
     
-    public Fila(){
+    public FilaDeSolicitacoes(){
         primeiro = null;
         ultimo = null;
         totalDeSolicitacoes = 0;
