@@ -17,7 +17,7 @@ public class HashCentroRecursos {
     private CentroRecursos[] hashRoot = new CentroRecursos[121];
     
     public void addCentroRec(CentroRecursos centro){
-        double x = (centro.getCoord().getLon()+40.0)/0.2;
+        double x = (centro.getCoord().getLon()+40.5)/0.2;
         int i = (int)x;
         double y = (centro.getCoord().getLat()+13.0)/0.1;
         int j = (int)y;
@@ -26,13 +26,13 @@ public class HashCentroRecursos {
         if(this.hashRoot[pos] == null)
             this.hashRoot[pos] = centro;
         else
-            this.hashRoot[pos].getLista().add(centro);
+            this.hashRoot[pos].addCentroLista(centro);
     }
     
     public CentroRecursos searchCentro(int recurso, Coordinate coord){
         double x = (coord.getLon()+13)/0.1;
         int i = (int)x;
-        double y = (coord.getLat()+40)/0.2;
+        double y = (coord.getLat()+40.5)/0.2;
         int j = (int)y;
         int pos = 10*i+j;
         

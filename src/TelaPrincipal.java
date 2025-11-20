@@ -6,7 +6,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
-
+import java.util.Random;
 
 
 import javax.swing.*;
@@ -49,6 +49,8 @@ public class TelaPrincipal extends JFrame {
                 }
             }
         });
+        
+        inserirCentros();
 
         JButton rotaBtn = new JButton("Cadastrar Rota");
         rotaBtn.addActionListener(e -> cadastrarRota());
@@ -71,7 +73,7 @@ menuCentros.setMnemonic('C'); // Atalho Alt+A, depois C
 menuAcoes.add(menuCentros); // Adiciona o JMenu como um item do menuAcoes
 
 // Adiciona 4 itens genéricos ao Submenu 1
-adicionarItensGenericos(menuCentros, "Recurso");
+adicionarItensGenericos(menuCentros, "Centro");
 
 
 // --- Submenu 2: Equipes de Apoio (Substitui o JMenuItem) ---
@@ -106,6 +108,7 @@ setJMenuBar(menuBar);
 // Este método deve ser criado dentro da sua classe principal (ex: TelaPrincipal)
 
     }
+    
     
 private void adicionarItensGenericos(JMenu submenu, String prefixo) {
     for (int i = 1; i <= 4; i++) {
@@ -276,6 +279,20 @@ private void adicionarItensMenuRecursos(JMenu submenu, String prefixo){
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return R * c;
+    }
+    
+    public void inserirCentros(){
+        Random rand = new Random();
+        
+        for(int i=0; i<200; i++){
+            double x = -40.5 +2.0*(rand.nextDouble());
+            double y = -13.0 +1.0*(rand.nextDouble());
+            Coordinate coord = new Coordinate(y,x);
+            CentroRecursos centro = new CentroRecursos("Centro "+i, coord);
+            this.hashCentros.addCentroRec(centro);
+            map.addMapMarker(new MapMarkerDot("Centro "+i, coord));
+            lugares.add(centro);
+        }
     }
 
     public static void main(String[] args) {

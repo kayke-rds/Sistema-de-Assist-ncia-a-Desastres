@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 import org.openstreetmap.gui.jmapviewer.Coordinate;
-import java.util.LinkedList;
+import java.util.ArrayList;
 /**
  *
  * @author Cake
@@ -15,19 +15,19 @@ public class CentroRecursos extends Lugar{
     /**
      * @return the lista
      */
-    public LinkedList<CentroRecursos> getLista() {
+    public ArrayList<CentroRecursos> getLista() {
         return lista;
     }
 
     /**
      * @param lista the lista to set
      */
-    public void setLista(LinkedList<CentroRecursos> lista) {
+    public void setLista(ArrayList<CentroRecursos> lista) {
         this.lista = lista;
     }
 
     private Recurso[] listaRecursos = new Recurso[6];
-    private LinkedList<CentroRecursos> lista;
+    private ArrayList<CentroRecursos> lista = new ArrayList<>();
     
     public CentroRecursos(String nome, Coordinate coord){
         super(nome, "Centro de Recursos", coord);
@@ -44,6 +44,11 @@ public class CentroRecursos extends Lugar{
              this.getListaRecursos()[tipo-1].setQtd(this.getListaRecursos()[tipo-1].getQtd() + qtd);
         }
         
+    }
+    
+     public void addCentroLista(CentroRecursos centro){
+        
+        this.lista.add(centro);
     }
 
     /**
